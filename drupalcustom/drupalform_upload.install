@@ -18,12 +18,19 @@ function file_upload_schema() {
         'default' => 0,
         'description' => "fid of the uploaded file.",
       ),
-      'title' => array(
+      'client_id' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Title of the upload.',
+        'description' => 'Specified Client ID.',
+      ),
+      'imp_mgr' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Implementation manager name.',
       )
     ),
     'primary key' => array('id'),

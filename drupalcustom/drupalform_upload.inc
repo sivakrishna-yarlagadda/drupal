@@ -1,11 +1,30 @@
 <?php
 
 function file_upload_callback($form, &$form_state) {
-	
-	$form['#prefix'] =  "<table>";
+  
+  $img_dir = drupal_get_path('module', 'file_upload') . '/images';
+  
+  $form['#prefix'] =  "<table>";
   $form['#suffix'] =  "</table>";
   
-  $form['file_title1'] = array(
+  $form['client_id'] = array(
+    '#type' => 'password',
+    '#title' => t('Client ID'),
+    //'#required' => TRUE,
+    '#size' => 45,
+    '#prefix'=> '<tr><td>',
+    '#suffix'=> '</td>',
+  );
+  $form['imp_manager'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Implementation Manager'),
+    //'#required' => TRUE,
+    '#size' => 45,
+    '#prefix'=> '<td>',
+    '#suffix'=> '</td></tr>',
+  );
+  
+  /*$form['file_title1'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
     //'#required' => TRUE,
@@ -20,15 +39,15 @@ function file_upload_callback($form, &$form_state) {
     '#size' => 45,
     '#prefix'=> '<td>',
     '#suffix'=> '</td></tr>',
-  );
+  );*/
   $form['upload_item1'] = array(
 		'#type' => 'file',
-    '#prefix'=>'<tr><td><span class="txt-upform">This a sample text for demo purpose.</span>',
+    '#prefix'=>'<tr><td><img src="'.$img_dir.'/tls.png" width="80" height="80"><br><span class="txt-upform">This a sample text for demo purpose.</span>',
     '#suffix'=>'</td>',
 	);
   $form['upload_item2'] = array(
 		'#type' => 'file',
-    '#prefix'=>'<td><span class="txt-upform">This a sample text for demo purpose.</span>',
+    '#prefix'=>'<td><img src="'.$img_dir.'/tls.png" width="80" height="80"><br><span class="txt-upform">This a sample text for demo purpose.</span>',
     '#suffix'=>'</td></tr>',
 	);
 	
@@ -82,7 +101,8 @@ function upload_file_submit_callback($form, &$form_state) {
       db_insert('file_upload_extra')
       ->fields(array(
         'fid' => $uploadCheck->fid,
-        'title' => $form_state['values']['file_title1'],
+        'client_id' => $form_state['values']['client_id'],
+        'imp_mgr' => $form_state['values']['imp_manager'],
       ))
       ->execute();
     }
@@ -98,7 +118,8 @@ function upload_file_submit_callback($form, &$form_state) {
       db_insert('file_upload_extra')
       ->fields(array(
         'fid' => $uploadCheck->fid,
-        'title' => $form_state['values']['file_title2'],
+        'client_id' => $form_state['values']['client_id'],
+        'imp_mgr' => $form_state['values']['imp_manager'],
       ))
       ->execute();
     }
