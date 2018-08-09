@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function file_upload_schema() {
+  $schema['file_upload_extra'] = array(
+    'description' => 'Stores extra fields along with file upload.',
+    'fields' => array(
+      'id'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique ID for table.',
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "fid of the uploaded file.",
+      ),
+      'client_id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Specified Client ID.',
+      ),
+      'imp_mgr' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Implementation manager name.',
+      )
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
