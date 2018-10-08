@@ -1,0 +1,5 @@
+name = Auto Populate Form
+description = Example module to show how auto populate fields work in forms.
+package = Custom
+core = 7.x
+version = 7.x-1.0

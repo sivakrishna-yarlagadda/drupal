@@ -1,0 +1,106 @@
+<?php
+
+function autopopulate_menu() {
+
+	$items['autopopulate'] = array(
+		'title' => t('Auto Populate'),
+		'description' => 'Auto Populate Example',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('autopopulate_callback'),
+		'access arguments' => array('access content'),
+		'type' => MENU_NORMAL_ITEM
+	);
+
+	return $items;
+}
+
+function autopopulate_callback($form, &$form_state) {
+  $options_first = array('0' => 'Select One', '1' => 'Veg', '2' => 'Non Veg');
+  if (isset($form_state['values']['dropdown_first'])) {
+    $selected1 = $form_state['values']['dropdown_first'];
+  } elseif (isset($_SESSION['options_first'])) {
+    $selected1 = $_SESSION['options_first'];
+  } else {
+    $selected1 = key($options_first);
+  }
+  $form['dropdown_first'] = array(
+    '#type' => 'select',
+    '#title' => 'Food Category',
+    '#prefix' => '<div id="dropdown-first-replace" class="form-select">',
+    '#suffix' => '</div>',
+    '#options' => $options_first,
+    '#default_value' => $selected1,
+    '#ajax' => array(
+      'callback' => 'autopopulate_dependent_dropdown_callback',
+      'wrapper' => 'dropdown-second-replace',
+    ),
+  );
+  
+  if (isset($form_state['values']['dropdown_second'])) {
+    $selected2 = $form_state['values']['dropdown_second'];
+  } elseif (isset($_SESSION['options_second'])) {
+    $selected2 = $_SESSION['options_second'];
+  } else {
+    $selected2 = '';
+  }
+  // Second option
+  $form['dropdown_second'] = array(
+    '#type' => 'select',
+    '#title' => 'Food Select',
+    '#prefix' => '<div id="dropdown-second-replace" class="form-select">',
+    '#suffix' => '</div>',
+    //'#options' => isset($form_state['values']['dropdown_first']) ? autopopulate_get_second_dropdown_options($selected1) : 0,
+    '#options' => autopopulate_get_second_dropdown_options($selected1),
+    '#default_value' => $selected2,
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+    '#submit' => array('autopopulate_submit_callback'),
+  );
+  
+  $form['Result'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Result'),
+    '#default_value' => md5($_SESSION['options_first'].'-'.$_SESSION['options_second']),
+  );
+  
+  return $form;
+}
+
+function autopopulate_dependent_dropdown_callback($form, $form_state) {
+  return $form['dropdown_second'];
+}
+
+function autopopulate_get_second_dropdown_options($key = '') {
+  $options = array(
+    t('1') => drupal_map_assoc(array(
+      t('Bhatura'),
+      t('Chana masala'),
+      t('Dal'),
+      t('Dosa'),
+      t('Paratha'),
+      t('Rice'),
+      t('Roti'),
+      t('Veg Curry'),
+    )),
+    t('2') => drupal_map_assoc(array(
+      t('Biryani'),
+      t('Chicken Curry'),
+      t('Egg Curry'),
+      t('Mutton Curry'),
+    )),
+  );
+  if (isset($options[$key])) {
+    return $options[$key];
+  }
+  else {
+    return array();
+  }
+}
+
+function autopopulate_submit_callback($form, &$form_state) {
+  $_SESSION['options_first'] = $form_state['values']['dropdown_first'];
+  $_SESSION['options_second'] = $form_state['values']['dropdown_second'];
+}
